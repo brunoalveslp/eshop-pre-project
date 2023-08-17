@@ -1,3 +1,4 @@
+using Core.Interfaces;
 using Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,8 +18,10 @@ namespace API
             builder.Services.AddSwaggerGen();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
+            // Add database service
             builder.Services.AddDbContext<StoreContext>(opt => opt.UseSqlite(connectionString));
+            // Add repository service
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
             var app = builder.Build();
 
