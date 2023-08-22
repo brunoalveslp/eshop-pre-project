@@ -10,9 +10,9 @@ namespace API.Controllers;
 [Route("api/{controller}")]
 public class ProductTypesController : ControllerBase
 {
-    private readonly IProductTypeRepository _repo;
+    private readonly IGenericRepository<ProductType> _repo;
 
-    public ProductTypesController(IProductTypeRepository repo)
+    public ProductTypesController(IGenericRepository<ProductType> repo)
     {
         _repo = repo;
     }
@@ -20,7 +20,7 @@ public class ProductTypesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ProductType>>> GetProductTypes()
     {
-        var productTypes = await _repo.GetProductTypesAsync();
+        var productTypes = await _repo.GetAllAsync();
 
         if(productTypes == null)
         {
@@ -33,7 +33,7 @@ public class ProductTypesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductType>> GetProductTypeById(int id)
     {
-        var productType = await _repo.GetProductTypeByIdAsync(id);
+        var productType = await _repo.GetByIdAsync(id);
 
         if(productType == null)
         {

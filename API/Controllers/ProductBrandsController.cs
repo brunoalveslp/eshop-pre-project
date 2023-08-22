@@ -11,8 +11,8 @@ namespace API.Controllers;
 
 public class ProductBrandsController : ControllerBase
 {
-    private readonly IProductBrandRepository _repo;
-    public ProductBrandsController(IProductBrandRepository repo)
+    private readonly IGenericRepository<ProductBrand> _repo;
+    public ProductBrandsController(IGenericRepository<ProductBrand> repo)
     {
         _repo = repo;
     }
@@ -20,7 +20,7 @@ public class ProductBrandsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ProductBrand>>> GetProductBrands()
     {
-        var productBrands = await _repo.GetProductBrands();
+        var productBrands = await _repo.GetAllAsync();
 
         if(productBrands == null)
         {
@@ -33,7 +33,7 @@ public class ProductBrandsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductBrand>> GetProductBrand(int id)
     {
-        var productBrand = await _repo.GetProductBrandByIdAsync(id);
+        var productBrand = await _repo.GetByIdAsync(id);
 
         if(productBrand == null)
         {

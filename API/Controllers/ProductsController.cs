@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Core.Interfaces;
+using Core.Specification;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -8,17 +9,17 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {
-    public readonly IProductRepository _repo;
-
-    public ProductsController(IProductRepository repo)
+    private readonly IGenericRepository<Product> _productsRepo;
+    public ProductsController(IGenericRepository<Product> productsRepo)
     {
-        _repo = repo;
+        _productsRepo = productsRepo;
     }
 
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts()
     {
-        var products = await _repo.GetProductsAsync();
+        var spec = new ProductsWithTypesAndBrandSpecification();    
+        var products = await _productsRepo.ListAsync(spec);
 
         return Ok(products);
     }
@@ -26,7 +27,8 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
-        var product = await _repo.GetProductByIdAsync(id);
+        var spec = new ProductsWithTypesAndBrandSpecification(id);
+        var product = await _productsRepo.GetEntityWithSpecification(spec);
 
         if (product == null)
         {

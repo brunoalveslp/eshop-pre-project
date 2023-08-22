@@ -22,6 +22,8 @@ namespace API
             builder.Services.AddDbContext<StoreContext>(opt => opt.UseSqlite(connectionString));
             // Add repository service
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            // setup in this case that you don't know the type
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             builder.Services.AddScoped<IProductBrandRepository, ProductBrandRepository>();
 
