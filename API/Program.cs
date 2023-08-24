@@ -42,6 +42,7 @@ namespace API
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
 
             app.MapControllers();
             // Create a Database if it's not exists
