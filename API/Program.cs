@@ -1,3 +1,4 @@
+using API.Helpers;
 using Core.Interfaces;
 using Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace API
             // Add repository service
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             // setup in this case that you don't know the type
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             builder.Services.AddScoped<IProductBrandRepository, ProductBrandRepository>();
