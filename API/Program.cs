@@ -1,5 +1,6 @@
+using API.Extentions;
 using API.Helpers;
-using Core.Interfaces;
+using API.Middleware;
 using Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,26 +22,29 @@ namespace API
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             // Add database service
             builder.Services.AddDbContext<StoreContext>(opt => opt.UseSqlite(connectionString));
-            // Add repository service
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+            builder.Services.AddApplicationService();
+
             // setup in this case that you don't know the type
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
-            builder.Services.AddScoped<IProductBrandRepository, ProductBrandRepository>();
+
+
+            builder.Services.AddSwaggerDocumentation();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseMiddleware<ExceptionMiddleware>();
+
+            // error handling needs this
+            app.UseStatusCodePagesWithReExecute("error/{0}");
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            // swagger configuration
+            app.UseSwaggerDocumention();
 
             app.UseStaticFiles();
 

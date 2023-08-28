@@ -1,5 +1,6 @@
 
 
+using API.Errors;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
@@ -7,10 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[ApiController]
-[Route("api/{controller}")]
-
-public class ProductBrandsController : ControllerBase
+public class ProductBrandsController : BaseApiController
 {
     private readonly IGenericRepository<ProductBrand> _repo;
     public ProductBrandsController(IGenericRepository<ProductBrand> repo)
@@ -25,20 +23,22 @@ public class ProductBrandsController : ControllerBase
 
         if(productBrands == null)
         {
-            return NotFound();
+            return NotFound(new ApiResponse(404));
         }
 
         return Ok(productBrands);
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProductBrand>> GetProductBrand(int id)
     {
         var productBrand = await _repo.GetByIdAsync(id);
 
         if(productBrand == null)
         {
-            return NotFound();
+            return NotFound(new ApiResponse(404));
         }
 
         return Ok(productBrand);
