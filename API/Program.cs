@@ -31,7 +31,23 @@ namespace API
 
             builder.Services.AddSwaggerDocumentation();
 
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularOrigins",
+                builder =>
+                {
+                    builder.WithOrigins(
+                                        "https://localhost:4200"
+                                        )
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                });
+            });
+
+
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             app.UseMiddleware<ExceptionMiddleware>();
@@ -40,6 +56,9 @@ namespace API
             app.UseStatusCodePagesWithReExecute("error/{0}");
 
             app.UseHttpsRedirection();
+
+            // UseCors
+            app.UseCors("AllowAngularOrigins");
 
             app.UseAuthorization();
 

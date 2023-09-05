@@ -1,9 +1,11 @@
 ﻿using API.Dtos;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Specification;
+using Core.Specifications;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -21,18 +23,22 @@ public class ProductsController : BaseApiController
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts(string sort,
-        int? brandId, int? typeId)
+    public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery] ProductSpecParams productParams)
     {
-        var spec = new ProductsWithTypesAndBrandSpecification(sort, brandId, typeId);    
+        var spec = new ProductsWithTypesAndBrandSpecification(productParams);
+        var countSpec = new ProductsWithFiltersForCountSpecification(productParams);
+        var totalItems = await _productsRepo.CountAsync(countSpec);
         var products = await _productsRepo.ListAsync(spec);
 
-        if(products == null)
+
+        if (products == null)
         {
             return NotFound(new ApiResponse(404));
         }
 
-        return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
+        var data = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductToReturnDto>>(products);
+
+        return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex, productParams.PageSize, totalItems, data));
     }
 
     [HttpGet("{id}")]
