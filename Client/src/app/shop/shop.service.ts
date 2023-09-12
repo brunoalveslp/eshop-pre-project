@@ -30,6 +30,8 @@ export class ShopService {
     params = params.append('pageIndex', shopParams.pageNumber);
     params = params.append('pageSize', shopParams.pageSize);
 
+    if(shopParams.search) params = params.append('search', shopParams.search);
+
     return this.http.get<Pagination>(this.baseUrl+'products', { params });
   }
 
