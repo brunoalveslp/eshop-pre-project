@@ -4,6 +4,7 @@ import { Pagination } from '../shared/models/pagination';
 import { Type } from '../shared/models/type';
 import { Brand } from '../shared/models/brand';
 import { ShopParams } from '../shared/models/shopParams';
+import { Product } from '../shared/models/product';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,10 @@ export class ShopService {
     if(shopParams.search) params = params.append('search', shopParams.search);
 
     return this.http.get<Pagination>(this.baseUrl+'products', { params });
+  }
+
+  getProduct(id: number){
+    return this.http.get<Product>(this.baseUrl+'products/'+id);
   }
 
   getTypes(){

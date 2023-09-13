@@ -1,9 +1,13 @@
 <div class="d-flex flex-column flex-md-row align-items-center justify-content-between p-3 px-md-4 mb-3 border-bottom shadow-sm fixed-top bg-white">
-  <img src="/assets/images/Logo.svg" style="max-height: 40px;" alt="logo">
+  <img class="logo" src="/assets/images/Logo.svg" style="max-height: 40px;" alt="logo" routerLink="/">
   <nav class="my-2 mt-md-3 text-uppercase" style="font-size: larger;">
-    <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">Home</a>
-    <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">Shop</a>
-    <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="#">Contact</a>
+    <a class="me-3"
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{  exact: true }"
+      >Home</a>
+    <a class="me-3" routerLink="/shop" routerLinkActive="active">Shop</a>
+    <a class="me-3" routerLink="/Contact" routerLinkActive="active">Contact</a>
   </nav>
   <div class="d-flex align-items-center">
     <a href="#" class="position-relative">
