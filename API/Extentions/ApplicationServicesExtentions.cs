@@ -2,6 +2,7 @@
 using Core.Interfaces;
 using Infraestructure.Data;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 
 namespace API.Extentions
 {
@@ -12,6 +13,7 @@ namespace API.Extentions
             // Add repository service
             // services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IBasketRepository, BasketRepository>();
             // services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             // services.AddScoped<IProductBrandRepository, ProductBrandRepository>();
             // just like configure method inside startup class
