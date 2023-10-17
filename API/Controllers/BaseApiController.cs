@@ -3,7 +3,7 @@
 namespace API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")] // controller must by inset [] and not {}
+[Route("api/[controller]")] // controller must by insert [] and not {}
 public class BaseApiController : ControllerBase
 {
 }

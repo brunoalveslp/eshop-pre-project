@@ -1,7 +1,10 @@
 using API.Extentions;
 using API.Helpers;
 using API.Middleware;
+using Core.Entities.Identity;
 using Infraestructure.Data;
+using Infraestructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -33,6 +36,7 @@ namespace API
             });
 
             builder.Services.AddApplicationService();
+            builder.Services.AddIdentityService(builder.Configuration);
 
             // setup in this case that you don't know the type
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
@@ -62,13 +66,14 @@ namespace API
             app.UseMiddleware<ExceptionMiddleware>();
 
             // error handling needs this
-            app.UseStatusCodePagesWithReExecute("error/{0}");
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseHttpsRedirection();
 
             // UseCors
             app.UseCors("AllowAngularOrigins");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             // swagger configuration
@@ -86,8 +91,12 @@ namespace API
                 try
                 {
                     var context = services.GetRequiredService<StoreContext>();
+                    var identityContext = services.GetRequiredService<AppIdentityDbContext>();
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     await context.Database.MigrateAsync();
+                    await identityContext.Database.MigrateAsync();
                     await StoreContextSeed.SeedAsync(context, loggerFactory);
+                    await AppIdentityDbContextSeed.SeedUserAsync(userManager);
                 }
                 catch(Exception ex)
                 {

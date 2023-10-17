@@ -1,6 +1,7 @@
 ﻿using API.Errors;
 using Core.Interfaces;
 using Infraestructure.Data;
+using Infraestructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using StackExchange.Redis;
 
@@ -14,6 +15,7 @@ namespace API.Extentions
             // services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<ITokenService, TokenService>();
             // services.AddScoped<IProductTypeRepository, ProductTypeRepository>();
             // services.AddScoped<IProductBrandRepository, ProductBrandRepository>();
             // just like configure method inside startup class
