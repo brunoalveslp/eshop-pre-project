@@ -21,8 +21,8 @@ namespace API
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            
+            builder.Services.AddSwaggerDocumentation();
             
 
             var connectionString = config.GetConnectionString("DefaultConnection");
@@ -42,7 +42,6 @@ namespace API
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 
-            builder.Services.AddSwaggerDocumentation();
 
 
             builder.Services.AddCors(options =>
