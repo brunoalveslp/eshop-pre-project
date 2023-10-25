@@ -30,7 +30,9 @@ import { SharedModule } from '../shared/shared.module';
       preventDuplicates: true
     }),
     BreadcrumbModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    SharedModule
+    
   ],
   exports: [
     NavBarComponent,
