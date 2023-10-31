@@ -1,6 +1,7 @@
 
 using System.Text.Json;
 using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Microsoft.Extensions.Logging;
 
 namespace Infraestructure.Data;
@@ -15,41 +16,32 @@ public class StoreContextSeed
             {
                 var brandsData = File.ReadAllText("../Infraestructure/Data/SeedData/brands.json");
                 var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsData);
-
-                foreach(var brand in brands)
-                {
-                    context.ProductBrands.Add(brand);
-                }
-
-                await context.SaveChangesAsync();
+                context.ProductBrands.AddRange(brands);
             }
 
             if(!context.ProductTypes.Any())
             {
                 var typesData = File.ReadAllText("../Infraestructure/Data/SeedData/types.json");
                 var types = JsonSerializer.Deserialize<List<ProductType>>(typesData);
-
-                foreach(var type in types)
-                {
-                    context.ProductTypes.Add(type);
-                }
-
-                await context.SaveChangesAsync();
+                context.ProductTypes.AddRange(types);
             }
 
             if(!context.Products.Any())
             {
                 var productsData = File.ReadAllText("../Infraestructure/Data/SeedData/products.json");
                 var products = JsonSerializer.Deserialize<List<Product>>(productsData);
+                context.Products.AddRange(products);
+            }
+            
+            if(!context.DeliveryMethods.Any())
+            {
+                var deliverysData = File.ReadAllText("../Infraestructure/Data/SeedData/delivery.json");
+                var methods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliverysData);
 
-                foreach(var product in products)
-                {
-                    context.Add(product);
-                }
-
-                await context.SaveChangesAsync();
+                context.DeliveryMethods.AddRange(methods);
             }
 
+            if(context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
         }
         catch(Exception ex)
         {
