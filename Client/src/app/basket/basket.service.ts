@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment.development';
 import { Basket, BasketItem, BasketTotals } from '../shared/models/basket';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../shared/models/product';
+import { DeliveryMethod } from '../shared/models/deliveryMethod';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class BasketService {
   baseUrl = environment.apiUrl;
   private basketSource = new BehaviorSubject<Basket | null>(null);
   private basketTotalSource = new BehaviorSubject<BasketTotals | null>(null);
+  shipping = 0;
 
   basketSource$ = this.basketSource.asObservable();
   basketTotalSource$ = this.basketTotalSource.asObservable();
@@ -81,11 +83,20 @@ export class BasketService {
   deleteBasket(basket: Basket) {
     return this.http.delete(this.baseUrl+'basket?id='+basket.id).subscribe({
       next: () => {
-        this.basketSource.next(null);
-        this.basketTotalSource.next(null);
-        localStorage.removeItem('basket_id');
+        this.deleteLocalBasket();
       }
     });
+  }
+
+  deleteLocalBasket(){
+    this.basketSource.next(null);
+    this.basketTotalSource.next(null);
+    localStorage.removeItem('basket_id');
+  }
+
+  setShippingPrice(deliveryMethod: DeliveryMethod){
+    this.shipping = deliveryMethod.price;
+    this.calculateTotals();
   }
 
   private addOrUpdateItem(items: BasketItem[], itemToAdd: BasketItem, quantity: number): BasketItem[] {
@@ -121,14 +132,14 @@ export class BasketService {
   private calculateTotals(){
       const basket = this.getCurrentBasketValue();
       if(!basket) return;
-      const shipping = 0;
       const subtotal = basket.items.reduce((prev, current) => (current.price * current.quantity) + prev, 0);
-      const total = shipping + subtotal;
+      const total = this.shipping + subtotal;
 
-      this.basketTotalSource.next({shipping, subtotal, total});
+      this.basketTotalSource.next({shipping: this.shipping, subtotal, total});
    }
 
    private isProduct(item: Product | BasketItem): item is Product {
       return (item as Product).productBrand !== undefined;
    }
+
 }

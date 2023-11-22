@@ -13,8 +13,8 @@ export class AppComponent implements OnInit {
   constructor(private basketService: BasketService, private accountService: AccountService){}
 
   ngOnInit(): void {
-
     this.loadCurrentUser();
+    this.loadBasket();
   }
 
   loadBasket(){

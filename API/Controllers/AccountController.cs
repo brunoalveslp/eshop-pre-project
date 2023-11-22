@@ -61,6 +61,7 @@ public class AccountController : BaseApiController
 		return _mapper.Map<Address, AddressDto>(user.Address);
 	}
 
+	[Authorize]
 	[HttpPut("address")]
 	[Authorize]
 	public async Task<ActionResult<AddressDto>> UpdateUserAddress(AddressDto address)

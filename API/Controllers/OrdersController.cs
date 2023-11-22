@@ -62,7 +62,7 @@ public class OrdersController: BaseApiController
     {
         var dm = await _orderService.GetDeliveryMethodsAsync();
 
-        if (dm is null) return BadRequest(new ApiResponse(404));
+        if (dm is null) return BadRequest(new ApiResponse(400));
 
         return Ok(dm);
     }
